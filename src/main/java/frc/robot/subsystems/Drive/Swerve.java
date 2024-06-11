@@ -8,19 +8,21 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants.AutonConstants;
 import swervelib.SwerveDrive;
+import swervelib.parser.SwerveControllerConfiguration;
+import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 public class Swerve extends SubsystemBase{
@@ -44,6 +46,9 @@ public class Swerve extends SubsystemBase{
 
     }
     
+    public void SwerveSubsystem(SwerveDriveConfiguration driveCFG, SwerveControllerConfiguration controlCFG){
+        swerveDrive = new SwerveDrive(driveCFG, controlCFG, maxspeed);
+    }
     public void setUpPathPlanner() {
         AutoBuilder.configureHolonomic(
         this::getPose, // Robot pose supplier
@@ -111,7 +116,9 @@ public class Swerve extends SubsystemBase{
         swerveDrive.driveFieldOriented(velocity);
     }
 
-
+    public SwerveDriveKinematics getKinematics(){
+        return swerveDrive.kinematics;
+    }
     public Pose2d getPose() {
         return swerveDrive.getPose();
     }
